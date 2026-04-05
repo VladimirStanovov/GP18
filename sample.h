@@ -85,7 +85,83 @@ void qSort1(double* Mass, const int low, const int high)
     if(low<j)   qSort1(Mass,low,j);
     if(i<high)  qSort1(Mass,i,high);
 }
-
+void qSort2int(double* Mass, int* Mass2, const int low, const int high)
+{
+    int i=low;
+    int j=high;
+    double x=Mass[(low+high)>>1];
+    do
+    {
+        while(Mass[i]<x)    ++i;
+        while(Mass[j]>x)    --j;
+        if(i<=j)
+        {
+            double temp=Mass[i];
+            Mass[i]=Mass[j];
+            Mass[j]=temp;
+            int temp2=Mass2[i];
+            Mass2[i]=Mass2[j];
+            Mass2[j]=temp2;
+            i++;    j--;
+        }
+    } while(i<=j);
+    if(low<j)   qSort2int(Mass,Mass2,low,j);
+    if(i<high)  qSort2int(Mass,Mass2,i,high);
+}
+void qSortintint(int* Mass, int* Mass2, const int low, const int high)
+{
+    int i=low;
+    int j=high;
+    int x=Mass[(low+high)>>1];
+    do
+    {
+        while(Mass[i]<x)    ++i;
+        while(Mass[j]>x)    --j;
+        if(i<=j)
+        {
+            int temp=Mass[i];
+            Mass[i]=Mass[j];
+            Mass[j]=temp;
+            int temp2=Mass2[i];
+            Mass2[i]=Mass2[j];
+            Mass2[j]=temp2;
+            i++;    j--;
+        }
+    } while(i<=j);
+    if(low<j)   qSortintint(Mass,Mass2,low,j);
+    if(i<high)  qSortintint(Mass,Mass2,i,high);
+}
+void get_fract_ranks(double* Vals, double* Ranks, int n, int* indexes, double* TVals, double* TRanks)
+{
+    for(int i=0;i!=n;i++)
+    {
+        indexes[i] = i;
+        TRanks[i] = i;
+        TVals[i] = Vals[i];
+    }
+    qSort2int(TVals,indexes,0,n-1);
+    int i = 0;
+    while(i<n)
+    {
+        int neq = 0;
+        double sranks = 0;
+        for(int j=i;j<n;j++)
+        {
+            if(TVals[i] == TVals[j] || i == j)
+            {
+                neq++;
+                sranks += TRanks[j];
+            }
+            else
+                break;
+        }
+        for(int j=i;j!=i+neq;j++)
+            TRanks[j] = sranks/double(neq);
+        i += neq;
+    }
+    for(int k=0;k!=n;k++)
+        Ranks[indexes[k]] = TRanks[k];
+}
 class sample
 {
 public:
